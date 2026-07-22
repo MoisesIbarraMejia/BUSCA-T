@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Búsqueda por Domicilio — SCMGPC</title>
+<link rel="icon" type="image/png" href="logoiecm.png">
+<link rel="apple-touch-icon" href="logoiecm.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCw42oKA6idOiNV51RXLHzRwYwn7MerDBI" async defer></script>
@@ -1180,7 +1182,8 @@ var _marcadorPunto = null;  // para el marcador del punto en el mapa
 const API_PROXY_URL = '/api-proxy.php';              // Desarrollo/Producción
 // const API_PROXY_URL = '/dev_caracteristicas_UnidadesTerritoriales/api-proxy_local.php'; // Local
 var TABLE    = 'uts_mgpc';      // ajusta si tu tabla tiene otro nombre en la API
-var TABLE_MESAS = 'mesas_2396';// tabla para datos de mesas (ajusta si es diferente)
+var TABLE_MESAS = 'mesas_2396';// tabla para datos de mesas 
+var MOSTRAR_MESAS = false;   // ← cambiar a true para reactivar mesas
 
 /* ── Estado ──────────────────────────────────────────── */
 var _calleActual = '';
@@ -1575,7 +1578,8 @@ function pintarMapaConPunto(feature, lat, lon, mapId, wrapId) {
 
     var btnConfirmar = document.createElement('button');
     btnConfirmar.className = 'btn btn-primary';
-    btnConfirmar.textContent = '✓ Confirmar Ubicación y ver MRVyO';
+    // btnConfirmar.textContent = '✓ Confirmar Ubicación y ver MRVyO';
+    btnConfirmar.textContent = '✓ Confirmar Ubicación';
     btnConfirmar.style.cssText = 'cursor: pointer;';
 
     btnConfirmar.onclick = function() {
@@ -1875,8 +1879,10 @@ function confirmarUbicacion(lat, lon) {
 
 
             renderTabla(feature);
-            document.getElementById('nota_mesas').classList.add('visible');
-            setMapaStatus('ok', '✓ Ubicación confirmada. Cargando mesas...');
+            if (MOSTRAR_MESAS) {
+                document.getElementById('nota_mesas').classList.add('visible');
+            }
+            setMapaStatus('ok', '✓ Ubicación confirmada.');
 
             var mapDiv = document.getElementById('map_domicilio');
 
@@ -1963,7 +1969,7 @@ function confirmarUbicacion(lat, lon) {
                 setTimeout(function() { newInfoWindow.open(map); }, 300);
 
                 // 5. Cargar mesas de la UT
-                if (claveUT) {
+                if (MOSTRAR_MESAS && claveUT) {
                     cargarMesas(map, claveUT, lat, lon);
                 }
             }

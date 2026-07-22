@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Búsqueda por Ubicación — SCMGPC</title>
+<link rel="icon" type="image/png" href="logoiecm.png">
+<link rel="apple-touch-icon" href="logoiecm.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCw42oKA6idOiNV51RXLHzRwYwn7MerDBI&libraries=marker"></script>
@@ -1059,6 +1061,7 @@ const API_PROXY_URL = '/api-proxy.php';              // Desarrollo/Producción
 // const API_PROXY_URL = '/dev_caracteristicas_UnidadesTerritoriales/api-proxy_local.php'; // Local
 var TABLE    = 'uts_mgpc';      // ajusta si tu tabla tiene otro nombre en la API
 var TABLE_MESAS = 'mesas_2396';
+var MOSTRAR_MESAS = false;
 
 /* ── Helpers UI ─────────────────────────────────────── */
 function setStatus(tipo, msg, conSpinner) {
@@ -1513,7 +1516,8 @@ function pintarMapa(feature, mapId, wrapId, userLat, userLon) {
 
     var btnConfirmar = document.createElement('button');
     btnConfirmar.className = 'btn btn-primary';
-    btnConfirmar.textContent = '✓ Confirmar Ubicación y ver MRVyO';
+    // btnConfirmar.textContent = '✓ Confirmar Ubicación y ver MRVyO';
+    btnConfirmar.textContent = '✓ Confirmar Ubicación';
     btnConfirmar.style.cssText = 'cursor: pointer;';
 
     btnConfirmar.onclick = function() {
@@ -1597,7 +1601,9 @@ function confirmarUbicacion(lat, lon) {
             window._utIdActual = feature.id; // AGREGA ESTA LÍNEA
             registrarMetrica(feature.id, 'busquedas_ubicacion'); // AGREGA ESTA LÍNEA
             renderTabla(feature);
-            document.getElementById('nota_mesas').classList.add('visible');
+            if (MOSTRAR_MESAS) {
+                document.getElementById('nota_mesas').classList.add('visible');
+            }
             
             // ACTUALIZAR EL MAPA CON EL NUEVO POLÍGONO
             var mapDiv = document.getElementById('map_ubicacion');
@@ -1716,7 +1722,7 @@ function confirmarUbicacion(lat, lon) {
                     newInfoWindow.open(map);
                 }, 300);
 
-                if (claveUT) {
+                if (MOSTRAR_MESAS && claveUT) {
                     cargarMesas(map, claveUT, lat, lon);
                 }
                 
